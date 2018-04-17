@@ -21,8 +21,10 @@ def verify():
     hashcode = sha1.hexdigest()
     print("handle/GET func: hashcode, signature: ", hashcode, signature)
     if hashcode == signature:
+        print(echostr)
         return echostr
     else:
+        print("fuck")
         return ""
 
 if __name__ == '__main__':
