@@ -1,4 +1,4 @@
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, make_response
 import json
 from lxml import etree
 import time
@@ -69,24 +69,6 @@ def weixin():
         response = make_response(reply_str)
         response.content_type = 'application/xml'
         return response
-    # else:
-    #     token = config.wx_token
-    #     signature = request.args.get('signature')
-    #     timestamp = request.args.get('timestamp')
-    #     nonce = request.args.get('nonce')
-    #     echostr = request.args.get("echostr")
-    #     try:
-    #         L = [token, timestamp, nonce]
-    #         L.sort()
-    #         string_check = L[0]+L[1]+L[2]
-    #         result += '\n' + string_check
-    #         string_check = string_check.encode("utf-8")
-    #         check_answer = hashlib.sha1(string_check).hexdigest()
-    #         result += '\n' + check_answer
-    #         if check_answer == signature:
-    #             return echostr
-    #     except Exception as e:
-    #         result += str(e)
     return result
 
 
