@@ -1,5 +1,14 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
-import hashlib
+import json
+from lxml import etree
+import time
+import logging
+import requests
+# from . import config
+import re
+from bs4 import BeautifulSoup
+
+logging.basicConfig(filename='logger.log', level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -18,19 +27,7 @@ def do_verify():
     # print("handle/GET func: hashcode, signature: ", hashcode, signature)
     return echostr
 
-@app.route('/weixin', methods=['GET', 'POST'])import hashlib
-import json
-from lxml import etree
-import time
-import logging
-import requests
-from . import config
-import re
-from bs4 import BeautifulSoup
 
-logging.basicConfig(filename='logger.log', level=logging.INFO)
-
-app = Flask(__name__)
 doc_string = """
 - 发送中文：AI自动回复。(具有情景上下文)
 - 发送图片：进行人脸识别。
@@ -72,24 +69,24 @@ def weixin():
         response = make_response(reply_str)
         response.content_type = 'application/xml'
         return response
-    else:
-        token = config.wx_token
-        signature = request.args.get('signature')
-        timestamp = request.args.get('timestamp')
-        nonce = request.args.get('nonce')
-        echostr = request.args.get("echostr")
-        try:
-            L = [token, timestamp, nonce]
-            L.sort()
-            string_check = L[0]+L[1]+L[2]
-            result += '\n' + string_check
-            string_check = string_check.encode("utf-8")
-            check_answer = hashlib.sha1(string_check).hexdigest()
-            result += '\n' + check_answer
-            if check_answer == signature:
-                return echostr
-        except Exception as e:
-            result += str(e)
+    # else:
+    #     token = config.wx_token
+    #     signature = request.args.get('signature')
+    #     timestamp = request.args.get('timestamp')
+    #     nonce = request.args.get('nonce')
+    #     echostr = request.args.get("echostr")
+    #     try:
+    #         L = [token, timestamp, nonce]
+    #         L.sort()
+    #         string_check = L[0]+L[1]+L[2]
+    #         result += '\n' + string_check
+    #         string_check = string_check.encode("utf-8")
+    #         check_answer = hashlib.sha1(string_check).hexdigest()
+    #         result += '\n' + check_answer
+    #         if check_answer == signature:
+    #             return echostr
+    #     except Exception as e:
+    #         result += str(e)
     return result
 
 
@@ -217,8 +214,8 @@ def handle_msg(msg_type, recv_msg):
             except Exception as e:
                 print(e)
                 ret_content = "Sorry, failed to get music."
-        elif content.find(config.my_name) != -1:
-            ret_content = config.my_name+"是世界上最帅的人！"
+        # elif content.find(config.my_name) != -1:
+        #     ret_content = config.my_name+"是世界上最帅的人！"
         else: # get turing response.
             try:
                 ret_content = get_turing_response(content, recv_msg.find('FromUserName').text)
@@ -237,8 +234,10 @@ def handle_msg(msg_type, recv_msg):
         # file.write(img)
         try:
             url = 'https://api-cn.faceplusplus.com/facepp/v3/detect'
-            api_key = config.api_key
-            api_secret = config.api_secret
+            # api_key = config.api_key
+            # api_secret = config.api_secret
+            api_key = ''
+            api_secret = ''
             param = dict()
             param['api_key'] = api_key
             param['api_secret'] = api_secret
@@ -265,8 +264,10 @@ def handle_msg(msg_type, recv_msg):
 
 
 def get_turing_response(content, from_user):
-    turing_key = config.turing_key
-    turing_api = config.turing_api
+    # turing_key = config.turing_key
+    # turing_api = config.turing_api
+    turing_key = ''
+    turing_api = ''
     ask_info = dict()
     ask_info['key'] = turing_key
     ask_info['info'] = content
