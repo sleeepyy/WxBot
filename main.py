@@ -12,20 +12,12 @@ def verify():
     echostr = request.args.get('echostr')
     timestamp = request.args.get('timestamp')
     nonce = request.args.get('nonce')
-    token = 'shuxuewuli'
     
-    l = [token, timestamp, nonce]
-    l.sort()
-    sha1 = hashlib.sha1()
-    map(sha1.update, l)
-    hashcode = sha1.hexdigest()
-    print("handle/GET func: hashcode, signature: ", hashcode, signature)
-    if hashcode == signature:
-        print(echostr)
-        return echostr
-    else:
-        print("fuck")
-        return ""
+    # l = [token, timestamp, nonce]
+    # l.sort()    
+    # hashcode = hashlib.sha1(l).hexdigest()
+    # print("handle/GET func: hashcode, signature: ", hashcode, signature)
+    return echostr
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
